@@ -1,0 +1,92 @@
+package com.ssm.test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.management.loading.PrivateClassLoader;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.ssm.beans.Code;
+import com.ssm.beans.DeviceInfoBean;
+import com.ssm.beans.MassifProductbean;
+import com.ssm.beans.ProbeSpecificDataBean;
+import com.ssm.beans.SmartControllerBean;
+import com.ssm.service.ISmartControllerService;
+import com.ssm.service.impl.CodeServiceImpl;
+import com.ssm.service.impl.DeviceInfoServiceImpl;
+import com.ssm.service.impl.MassIfProductServiceImpl;
+import com.ssm.service.impl.ProbeServiceImpl;
+import com.ssm.service.impl.ProbeSpecificDataServiceImpl;
+import com.ssm.service.impl.SmartControllerServiceImpl;
+import com.ssm.util.BaseUtil;
+
+public class testMapper {
+//
+//	@Resource
+//	static ISmartControllerService smartControllerService;
+//
+//	@Autowired
+//	List<SmartControllerBean> smartControllerList;
+
+	public static void main(String[] args) {
+
+		try {
+			ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+			SmartControllerServiceImpl is = (SmartControllerServiceImpl) ctx.getBean("smartControllerService");
+			System.out.println("===="+is.selectAll());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// //初始化spring
+		// try {
+		// ApplicationContext ctx = new ClassPathXmlApplicationContext(
+		// "applicationContext.xml");
+		// List list =null;
+		// List list1 = null;
+		// 获取service的bean
+
+		// CodeServiceImpl is = (CodeServiceImpl) ctx.getBean("codeService");
+		// //获取码表数据
+		// list=is.findAll();
+
+		// System.out.println(list);
+		// MassIfProductServiceImpl is = (MassIfProductServiceImpl)
+		// ctx.getBean("massIfProductService");
+		// list = is.getMassifAndDeviceList(null);
+		// String[] aArray = new String[0];
+		// System.out.println(BaseUtil.listToJsonStr(list, aArray,
+		// MassifProductbean.class));
+		// //下面这个可以不用看
+		// ProbeSpecificDataServiceImpl isa = (ProbeSpecificDataServiceImpl)
+		// ctx.getBean("probeSpecificDataService");
+		// Map aaa= new HashMap<>();
+		// aaa.put("dsn", "C0180602211708090002");
+		// list = isa.findNewData(aaa);
+
+		// ProbeServiceImpl isa = (ProbeServiceImpl)
+		// ctx.getBean("probeServiceImpl");
+		// Map aaa= new HashMap<String,String>();
+		// aaa.put("deviceno", "C0180602211708090002");
+		// list = isa.getProbeAndProbeData(aaa);
+
+		// DeviceInfoServiceImpl isS = (DeviceInfoServiceImpl)
+		// ctx.getBean("deviceInfoService");
+		// Map aaa= new HashMap<>();
+		// aaa.put("deviceno", "C0180602211708090002");
+		// list = isS.getDeviceAndProbeList(aaa);
+		// String[] aArray = new String[0];
+		// System.out.println(BaseUtil.listToJsonStr(list, aArray,
+		// DeviceInfoBean.class));
+
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
+	}
+}

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.CameraInfoMapper">
+	
+	<!-- 返回的对象的结果集（主要是要维护massifproduct对象） -->
+	<resultMap type="com.ssm.beans.CameraInfoBean" id="queryAllCa">
+		<id property="id" column="id"/>
+		<result property="cameraName"  column="camera_name"/>
+		<result property="cameraUnitType"  column="camera_unit_type"/>
+		<result property="serialNumber"  column="serial_number"/>
+		<result property="caneraLoginId"  column="camera_login_id"/>
+		<result property="cameraPassword"  column="camera_password"/>
+		<result property="cameraPtzControl"  column="camera_ptz_control"/>
+		<result property="cameraZoomControl"  column="camera_zoom_control"/>
+		<result property="cameraChannnel"  column="camera_channel"/>
+		<result property="pkEnterpriseId"  column="pk_enterprise_id"/>
+		<result property="enterpriseName"  column="enterprise_name"/>
+		<result property="pkDeviceId"  column="pk_device_id"/>
+		<result property="createTime"  column="create_time"/>
+		<result property="updateTime"  column="update_time"/>
+		<result property="comments"  column="comments"/>
+		<result property="cameraImg" column="camera_img" />
+		<association property="massifProductbean" javaType="com.ssm.beans.MassifProductbean">
+			<id property="Id" column="id"/>
+			<result property="enterpriseId" column="enterprise_id"/>
+			<result property="enterpriseName" column="enterprise_name"/>
+			<result property="baseName" column="base_name"/>
+			<result property="massIfName" column="massif_name"/>
+		</association>
+	</resultMap>
+	<!-- 增 -->
+	<insert id="addCamera" parameterType="com.ssm.beans.CameraInfoBean">
+		insert into iot_camera_info
+			(id,camera_name,camera_unit_type,serial_number,camera_login_id,camera_password,camera_ptz_control,
+			camera_zoom_control,camera_channel,pk_enterprise_id,enterprise_name,pk_device_id,update_time,comment,camera_img)
+			values(#{id},#{cameraName},#{cameraUnitType},#{serialNumber},#{caneraLoginId},#{cameraPassword},#{cameraPtzControl},
+			#{cameraZoomControl},#{cameraChannnel},#{pkEnterpriseId},#{enterpriseName},#{pkDeviceId},#{updateTime},#{comments},#{cameraImg})
+	</insert>
+	<!-- 改 -->
+	<update id="updateCamera" parameterType="com.ssm.beans.CameraInfoBean">
+		update iot_camera_info
+			set camera_name=#{cameraName},camera_unit_type=#{cameraUnitType},serial_number=#{serialNumber},camera_login_id=#{caneraLoginId},
+			camera_password=#{cameraPassword},camera_ptz_control=#{cameraPtzControl},camera_zoom_control=#{cameraZoomControl},
+			camera_channel=#{cameraChannnel},pk_enterprise_id=#{pkEnterpriseId},enterprise_name=#{enterpriseName},pk_device_id=#{pkDeviceId},update_time=#{updateTime},
+			comments=#{comments},camera_img=#{cameraImg}
+		where 
+				id=#{id}
+	</update>
+	<!-- 改 -->
+	<delete id="deleteCaneraById" parameterType="java.lang.String">
+		delete from iot_camera_info where id=#{id}
+	</delete>
+	<!-- 联合区块表 查询所有摄像头 -->
+	<select id="selectAll" resultMap="queryAllCa">
+		SELECT
+			*
+		FROM
+			iot_camera_info c
+		LEFT JOIN iot_massif_product m ON c.serial_number = m.device_id
+		<where>
+			<if test="enterpriseId!='' and enterpriseId!=null">
+		    c.pk_enterprise_id=#{enterpriseId}
+		  	</if>
+		  	<if test="alQeada!='' and alQeada!=null">
+		    and m.base_id=#{alQeada}
+		  	</if>
+		  	<if test="massif!='' and massif!=null">
+		    and m.massif_id=#{massif}
+		  	</if>
+			<if test="aORb!=null and aORb!=''">
+		    and ((c.camera_name like  CONCAT(CONCAT('%', #{aORb}), '%')) or (c.pk_device_id like  CONCAT(CONCAT('%', #{aORb}), '%')))
+		   	</if>
+		</where>
+		order by 
+	  		c.enterprise_name,c.create_time desc;
+	</select>
+	
+	<select id="queryById" resultMap="queryAllCa" parameterType="java.lang.String">
+		SELECT
+			*
+		FROM
+			iot_camera_info c
+		LEFT JOIN iot_massif_product m ON c.serial_number = m.device_id
+		where c.id=#{id}
+	</select>
+	
+	<select id="findByEnterprId" resultMap="queryAllCa" parameterType="java.lang.String">
+		select c.id,c.camera_name,c.camera_unit_type,serial_number,c.camera_login_id,c.camera_password,c.camera_ptz_control,
+			c.camera_zoom_control,c.camera_channel,c.pk_enterprise_id,c.pk_device_id,c.create_time,c.update_time,c.comments,c.camera_img from iot_camera_info c  
+		where c.pk_enterprise_id=#{enterpriseId}
+	</select>
+	<select id="findBySer" resultMap="queryAllCa" parameterType="java.util.Map">
+		select c.id,c.camera_name,c.camera_unit_type,serial_number,c.camera_login_id,c.camera_password,c.camera_ptz_control,
+			c.camera_zoom_control,c.camera_channel,c.pk_enterprise_id,c.pk_device_id,c.create_time,c.update_time,c.comments,c.camera_img from iot_camera_info c  
+		where c.serial_number=#{deviceno,jdbcType=VARCHAR}
+	</select>
+	<select id="findByChannelAndpk" resultMap="queryAllCa" parameterType="java.lang.String">
+		select c.id,c.camera_name,c.camera_unit_type,serial_number,c.camera_login_id,c.camera_password,c.camera_ptz_control,
+			c.camera_zoom_control,c.camera_channel,c.pk_enterprise_id,c.pk_device_id,c.create_time,c.update_time,
+			c.comments,c.camera_img
+		from 
+			iot_camera_info c  
+		where 
+			c.camera_channel=#{channel} and c.pk_device_id=#{pkDeviceId}
+	</select>
+	
+</mapper>

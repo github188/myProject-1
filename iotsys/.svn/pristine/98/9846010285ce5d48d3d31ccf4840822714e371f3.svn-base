@@ -1,0 +1,175 @@
+
+.extend-input, .user-info ul li .user-name, .user-info ul li .email, .user-info ul li .password, .user-info ul li .code, .answer {
+    border: 1px solid #e1e1e1;
+    color: #666;
+    margin-left: 14px;
+    outline: 0 none;
+    padding: 8px 0;
+    text-indent: 5px;
+    vertical-align: middle;
+    width: 300px;
+}
+.user-info {
+    font-size: 1em;
+    text-align: center;
+    margin-top:29px;
+}
+.user-info ul {
+    margin: 0;
+    padding: 0;
+}
+.email-address{
+	margin-bottom: 32px;
+    margin-top: 28px;
+    padding-left: 70px;
+    text-align: center;
+}
+.red{
+	color:red;
+}
+.user-info ul li {
+    list-style: outside none none;
+    margin-bottom:27px;
+}
+.user-info ul li span {
+    display: inline-block;
+    text-align: right;
+    width: 100px;
+}
+
+
+.user-info ul .next-btn {
+    font-size: 1.062em;
+    text-align: center;
+}
+.user-info ul .next-btn .next-step {
+    background: #0A5AA3;
+    border: 0 none;
+    color: #fff;
+    display: inline-block;
+    height: 44px;
+    line-height: 44px;
+    margin-left: 20px;
+    width: 300px;
+    cursor:pointer;
+    padding:0;
+    margin:0;
+}
+
+.tooltip-info {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    color: #666;
+    display: none;
+    font-size: 0.75em;
+    max-width: 204px;
+    padding: 8px;
+    position: absolute;
+}
+.tooltip-info .icon-border {
+    border-color: transparent #ddd transparent transparent;
+    left: -17px;
+}
+.tooltip-info .icon-bg {
+    border-color: transparent #fff transparent transparent;
+    left: -15px;
+}
+.tooltip-info .mess {
+    display: inline-block;
+    text-align: left;
+    vertical-align: top;
+    width: 163px;
+}
+
+
+
+.user-info ul li .code {
+    width: 300px;
+}
+.user-info ul li .code-img {
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 0;
+    width: 135px;
+}
+.user-info ul li .code-title {
+    margin-left: 0;
+}
+.user-info ul li .change-code {
+    display: block;
+    float: none;
+    margin-left: -67px;
+    margin-right: 0;
+    margin-top: 5px;
+}
+
+
+.register-progress {
+    height: 36px;
+    margin: 5% auto auto;
+    text-align: center;
+    width: 621px;
+}
+.register-progress .pross {
+    background: #ddd none repeat scroll 0 0;
+    color: #666;
+    float: left;
+    font-size: 14px;
+    height: 35px;
+    line-height: 35px;
+    overflow: hidden;
+    padding-left: 10px;
+    position: relative;
+    width: 300px;
+}
+.register-progress .pross .index {
+    background: #999 none repeat scroll 0 0;
+    border-radius: 18px;
+    color: #fff;
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    margin-right: 10px;
+    text-align: center;
+    width: 18px;
+}
+.register-progress .pross .pross-dir {
+    background: #ddd none repeat scroll 0 0;
+    position: absolute;
+    right: -19px;
+    top: -17px;
+}
+.register-progress .pross .pross-dir .outside, .register-progress .pross .pross-dir .inside {
+    border-style: solid;
+    border-width: 35px 19px;
+    display: inline-block;
+    height: 0;
+    width: 0;
+}
+.register-progress .pross .pross-dir .outside {
+    border-color: transparent transparent transparent #f8f8f8;
+}
+.register-progress .pross .pross-dir .inside {
+    border-color: transparent transparent transparent #ddd;
+    margin-left: -47px;
+}
+.register-progress .pross-ok {
+    background: #70C3EE none repeat scroll 0 0;
+    color: #fff;
+}
+.register-progress .pross-ok .index {
+    background: #fff none repeat scroll 0 0;
+    color: #70C3EE;
+}
+.register-progress .pross-ok .pross-dir {
+    background: #ddd none repeat scroll 0 0;
+}
+.register-progress .pross-ok .pross-dir .outside {
+    border-color: transparent transparent transparent #f8f8f8;
+}
+.register-progress .pross-ok .pross-dir .inside {
+    border-color: transparent transparent transparent #70C3EE;
+}
+.register-progress .pross-ok .pross-dir-bg {
+    background: #f96 none repeat scroll 0 0;
+}

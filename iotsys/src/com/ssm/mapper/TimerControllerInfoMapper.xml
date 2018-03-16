@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.TimerControllerInfoMapper">
+	
+	<!-- 返回的对象的结果集（主要是要维护TimerControllerInfoBean对象） -->
+	<resultMap id="TimerControllerInfoMap" type="com.ssm.beans.TimerControllerInfoBean" >
+		<id column="id" jdbcType="VARCHAR" property="id" />
+	    <result column="controller_id" jdbcType="VARCHAR" property="controllerId" />
+	    <result column="device_serial_number" jdbcType="VARCHAR" property="deviceSerialNumber" />
+	    <result column="survey_no" jdbcType="INTEGER" property="surveyNo" />
+	    <result column="interval_days" jdbcType="INTEGER" property="intervalDays" />
+	    <result column="control_period_start" jdbcType="TIME" property="controlPeriodStart" />
+	    <result column="control_period_end" jdbcType="TIME" property="controlPeriodEnd" />
+	    <result column="is_regular" jdbcType="BIT" property="isRegular" />
+	    <result column="regular_start_date" jdbcType="DATE" property="regularStartDate" />
+	    <result column="regular_end_date" jdbcType="DATE" property="regularEndDate" />
+	    <result column="controller_status" jdbcType="BIT" property="controllerStatus" />
+	    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+	</resultMap>
+	
+	
+	<!-- 查找属于某个控制器的所有参数 -->
+	<sql id="Base_Column_List">
+    id, controller_id, device_serial_number, survey_no, interval_days, control_period_start, 
+    control_period_end, is_regular, regular_start_date, regular_end_date, controller_status, 
+    create_time, update_time
+  </sql>
+  
+    <!-- 测试运行通过  --> 
+	<select id="selectByOutKey"  resultMap="TimerControllerInfoMap">
+		SELECT 
+			id,controller_id, device_serial_number ,survey_no ,interval_days ,control_period_start,control_period_end,
+			control_period_end,is_regular,DATE_FORMAT(regular_start_date,'%Y-%c-%d %H:%i:%s'),DATE_FORMAT(regular_end_date,'%Y-%c-%d %H:%i:%s'),controller_status,DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s'),DATE_FORMAT(update_time,'%Y-%c-%d %H:%i:%s')
+		FROM 
+			iot_timer_control_info t
+		WHERE t.controller_id=#{id,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 测试运行通过  --> 
+	<!-- 增 -->
+	<insert id="addTimerControllerInfo" parameterType="com.ssm.beans.TimerControllerInfoBean">
+	insert into iot_timer_control_info (id,controller_id, device_serial_number, 
+      survey_no, interval_days, control_period_start, 
+      control_period_end, is_regular, regular_start_date, 
+      regular_end_date, controller_status, create_time, 
+      update_time)
+    values (#{id,jdbcType=VARCHAR},#{controllerId,jdbcType=VARCHAR}, #{deviceSerialNumber,jdbcType=VARCHAR}, 
+      #{surveyNo,jdbcType=INTEGER}, #{intervalDays,jdbcType=INTEGER}, #{controlPeriodStart,jdbcType=TIME}, 
+      #{controlPeriodEnd,jdbcType=TIME}, #{isRegular,jdbcType=BIT}, #{regularStartDate,jdbcType=DATE}, 
+      #{regularEndDate,jdbcType=DATE}, #{controllerStatus,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+	</insert>
+	
+
+	<!-- 测试运行通过  --> 
+	<!-- 改 -->
+	<update id="updateTimerControllerInfo" parameterType="com.ssm.beans.TimerControllerInfoBean">
+		update iot_timer_control_info
+			set controller_id=#{controllerId},device_serial_number=#{deviceSerialNumber},survey_no=#{surveyNo},
+			interval_days=#{intervalDays},control_period_start=#{controlPeriodStart},control_period_end=#{controlPeriodEnd},
+			is_regular=#{isRegular},regular_start_date=#{regularStartDate},regular_end_date=#{regularEndDate},
+			controller_status=#{controllerStatus},update_time=#{updateTime}
+		where 
+				id=#{id}
+	</update>
+	
+	<!-- 测试运行通过  --> 
+	<!-- 删 -->
+	<delete id="deleteTimerControllerInfoById" parameterType="java.lang.String">
+		delete from iot_timer_control_info where id=#{id}
+	</delete>
+	
+	<select id="getTimerControllerInfoById" parameterType="java.lang.String" resultMap="TimerControllerInfoMap">
+		select 
+			id, controller_id, device_serial_number, survey_no, interval_days, control_period_start, 
+   	 		control_period_end, is_regular, 
+    		DATE_FORMAT(regular_start_date,'%Y-%c-%d %H:%i:%s'),
+    		DATE_FORMAT(regular_end_date,'%Y-%c-%d %H:%i:%s'),
+    		controller_status,DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s'),
+    		DATE_FORMAT(update_time,'%Y-%c-%d %H:%i:%s')
+    	where
+    		id=#{id}
+	</select>
+	
+</mapper>

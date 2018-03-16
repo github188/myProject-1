@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.PowerControllerMapper">
+<!-- 自定义返回结果集 -->
+	<resultMap id="powerMap" type="com.ssm.beans.PowerControllerBean">
+		<result property="controllerName" column="controller_name" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_serial_number" javaType="java.lang.String"></result>
+		<result property="surveyNo" column="survey_no" javaType="java.lang.Integer"></result>
+		<result property="powerSwitch" column="power_switch"  javaType="java.lang.String"></result>
+		<result property="status" column="state"  javaType="java.lang.String"></result>
+	
+		<result property="icoName" column="ico_name"  javaType="java.lang.String"></result>
+		<result property="sortNo" column="sort_no"  javaType="java.lang.Integer"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="updateTime" column="update_time" javaType="java.lang.String"></result>
+	</resultMap>
+	
+	<!-- 开启关闭控制器控制器  2018-01-10 16:27:39'-->
+	<update id="controllerTurnOnOff" parameterType="java.util.Map">
+		update iot_power_controller SET power_switch=#{powerswitch},state=1, update_time=#{updatetime} WHERE id=#{id}
+    </update>
+	
+	
+	<select id="findPowerByDeviceSerialNumber"   resultMap="powerMap">
+		select id,controller_name,device_serial_number,survey_no, power_switch,state,ico_name,sort_no,DATE_FORMAT(update_time,'%Y-%c-%d %H:%i:%s') update_time,
+			DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') create_time,comments 
+		from 
+			iot_power_controller 
+		where 
+			device_serial_number = #{serial_number}
+		order by
+			sort_no;
+	</select>
+	
+	<!-- 批量插入 -->
+	<insert id="BatchInsert" parameterType="java.util.List">
+	   insert into iot_power_controller (id,controller_name,device_serial_number,survey_no,power_switch,state,ico_name,sort_no,update_time,comments) values 
+	    <foreach collection="list" item="controllers" separator=",">
+	     (#{controllers.id},#{controllers.controllerName},#{controllers.deviceSerialNumber},#{controllers.surveyNo},#{controllers.powerSwitch},#{controllers.status},#{controllers.icoName},#{controllers.sortNo},#{controllers.updateTime},#{controllers.comments})
+	    </foreach>
+	</insert>
+	 
+	 		 	<!-- 批量更新控制器 -->
+	<update id="UpdateBatchControllers" parameterType="java.util.List">
+        update iot_power_controller
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="controller_name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.controllerName!=null">
+                  when id=#{item.id} then #{item.controllerName}
+                  </if>
+                </foreach>
+            </trim> 
+            <trim prefix="survey_no =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.surveyNo!=null">
+                  when id=#{item.id} then #{item.surveyNo}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="ico_name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.icoName!=null">
+                  when id=#{item.id} then #{item.icoName}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="sort_no =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.sortNo!=null">
+                  when id=#{item.id} then #{item.sortNo}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="update_time =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.updateTime!=null">
+                  when id=#{item.id} then #{item.updateTime}
+                  </if>
+                </foreach>
+            </trim>
+        </trim>
+       <where>
+       <foreach collection="list" index="index" item="item" separator="or">
+            id=#{item.id}
+        </foreach>
+       </where>
+    </update>
+    
+    <delete id="deleteByDeviceSer">
+		delete from iot_power_controller where device_serial_number=#{serialNumber}
+	</delete>
+	
+	<delete id="deleteByIds">
+	delete from iot_power_controller where id in
+	 	<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">  
+        	#{item}  
+    	</foreach>  
+	</delete>
+</mapper>	

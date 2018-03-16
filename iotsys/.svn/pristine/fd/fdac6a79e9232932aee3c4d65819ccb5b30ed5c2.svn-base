@@ -1,0 +1,16 @@
+package com.ssm.mapper;
+
+import java.util.List;
+
+import com.ssm.beans.TimerControllerInfoBean;
+
+public interface TimerControllerInfoMapper {
+	
+	public List<TimerControllerInfoBean> selectAll()  throws Exception;
+	
+	public void addTimerControllerInfo(TimerControllerInfoBean timerControllerInfoBean)  throws Exception;
+	
+	public void updateTimerControllerInfo(TimerControllerInfoBean timerControllerInfoBean)  throws Exception;
+	
+	public void deleteTimerControllerInfoById(String id)  throws Exception;
+}

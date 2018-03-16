@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapperNS.Code">
+	<resultMap type="code" id="codeMap">
+		<result property="id" column="id"/>
+		<result property="parentid" column="parentid"/>
+		<result property="codetype" column="codetype"/>
+		<result property="codekey" column="codekey"/>
+		<result property="codevalue" column="codevalue"/>
+		<result property="sort" column="sort"/>
+		<result property="description" column="description"/>
+	</resultMap>
+	
+	<select id="findAll" resultMap="codeMap">
+		select * from code;
+	</select>
+</mapper> 

@@ -1,0 +1,20 @@
+package com.ssm.service;
+
+import java.util.List;
+
+import com.ssm.beans.ParameterControllerInfoBean;
+import com.ssm.beans.SmartControllerBean;
+import com.ssm.beans.TimerControllerInfoBean;
+
+public interface ISmartControllerService {
+
+	public List<SmartControllerBean> selectAll() throws Exception;
+	
+	public void addParameterControllerInfo(ParameterControllerInfoBean parameterControllerInfoBean) throws Exception;
+	public void updateParameterControllerInfo(ParameterControllerInfoBean parameterControllerInfoBean) throws Exception;
+	public void deleteParameterControllerInfoById(String id) throws Exception;
+	
+	public void addTimerControllerInfo(TimerControllerInfoBean timerControllerInfoBean) throws Exception;
+	public void updateTimerControllerInfo(TimerControllerInfoBean timerControllerInfoBean) throws Exception;
+	public void deleteTimerControllerInfoById(String id) throws Exception;
+}

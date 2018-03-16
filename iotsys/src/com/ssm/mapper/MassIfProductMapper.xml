@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.MassIfProductMapper">
+	<!-- 自定义返回结果集 -->
+ 	<resultMap id="probeSpecificBean" type="com.ssm.beans.MassifProductbean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="massifId" column="massif_id" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_id" javaType="java.lang.String"></result>
+		<result property="deviceType" column="device_type" javaType="java.lang.Integer" ></result>
+		<result property="enterpriseId" column="enterprise_id" javaType="java.lang.String"></result>
+		<result property="enterpriseName" column="enterprise_name" javaType="java.lang.String"></result>
+		<result property="baseId" column="base_id" javaType="java.lang.String"></result>
+		<result property="baseName" column="base_name" javaType="java.lang.String"></result>
+		<result property="massIfName" column="massif_name" javaType="java.lang.String"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="uploadTime" column="upload_time" javaType="java.lang.String"></result>
+	</resultMap> 
+	
+	<resultMap id="massifAndProbeDataMap" type="com.ssm.beans.MassifProductbean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="massifId" column="massif_id" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_id" javaType="java.lang.String"></result>
+		<result property="deviceType" column="device_type" javaType="java.lang.Integer" ></result>
+		<result property="enterpriseId" column="enterprise_id" javaType="java.lang.String"></result>
+		<result property="enterpriseName" column="enterprise_name" javaType="java.lang.String"></result>
+		<result property="baseId" column="base_id" javaType="java.lang.String"></result>
+		<result property="baseName" column="base_name" javaType="java.lang.String"></result>
+		<result property="massIfName" column="massif_name" javaType="java.lang.String"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="uploadTime" column="upload_time" javaType="java.lang.String"></result>
+		<collection property="probeSpecificDataBean" column="{dsn = device_id}" select="com.ssm.mapper.ProbeSpecificDataMapper.findNewData" />
+	</resultMap>
+	
+	<resultMap id="massifAndDeviceMap" type="com.ssm.beans.MassifProductbean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="massifId" column="massif_id" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_id" javaType="java.lang.String"></result>
+		<result property="deviceType" column="device_type" javaType="java.lang.Integer" ></result>
+		<result property="enterpriseId" column="enterprise_id" javaType="java.lang.String"></result>
+		<result property="enterpriseName" column="enterprise_name" javaType="java.lang.String"></result>
+		<result property="baseId" column="base_id" javaType="java.lang.String"></result>
+		<result property="baseName" column="base_name" javaType="java.lang.String"></result>
+		<result property="massIfName" column="massif_name" javaType="java.lang.String"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="uploadTime" column="upload_time" javaType="java.lang.String"></result>
+		<collection property="deviceInfoList" column="{deviceno = device_id}" select="com.ssm.mapper.DeviceInfoMapper.getDeviceAndProbeList" />
+		<collection property="cameraInfoList" column="{deviceno = device_id}" select="com.ssm.mapper.CameraInfoMapper.findBySer" />
+	</resultMap>
+	
+	<resultMap id="massifAndBaseMap" type="com.ssm.beans.MassifProductbean">
+	<id property="id" column="id" javaType="java.lang.String"></id>
+	<result property="baseId" column="base_id" javaType="java.lang.String"></result>
+	<result property="baseName" column="base_name" javaType="java.lang.String"></result>
+	<result property="massifId" column="massif_id" javaType="java.lang.String"></result>
+	<result property="massIfName" column="massif_name" javaType="java.lang.String"></result>
+	</resultMap>
+	
+	<resultMap id="DeviceCount" type="com.ssm.beans.MassifProductbean">
+	<result property="enterpriseId" column="enterprise_id" javaType="java.lang.String"></result>
+	<result property="baseId" column="base_id" javaType="java.lang.String"></result>
+	<result property="baseName" column="base_name" javaType="java.lang.String"></result>
+	<result property="deviceType" column="device_type"></result>
+	<result property="count" column="number"></result>
+	</resultMap>
+	
+	
+	<select id="getBase" resultMap="probeSpecificBean">
+	    SELECT base_id,base_name from iot_massif_product  
+	   <where>
+		<if test="enterpriseId!=null">
+  		enterprise_id = #{enterpriseId}
+  		</if> 
+		</where>
+		GROUP BY base_id order by upload_time desc
+	</select>
+	
+	<select id="getMassif" parameterType="java.lang.String" resultMap="probeSpecificBean">
+	  SELECT  massif_id,massif_name  from iot_massif_product 
+	  where base_id=#{baseId}
+	  group by massif_id  order by upload_time desc 
+	</select>
+	
+	
+	<select id="getMassifAndProbeData"  resultMap="massifAndProbeDataMap">
+	  SELECT id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,
+	  	base_name,massif_name,create_time,upload_time 
+	  from 
+	  	iot_massif_product
+	</select>
+	
+	<select id="getMassifAndProbeDataByDeviceSer"  resultMap="probeSpecificBean">
+	  SELECT id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,
+	  	base_name,massif_name,create_time,upload_time 
+	  from 
+	  	iot_massif_product
+	  where 
+	  	device_id=#{deviceId}
+	</select>
+	
+	
+	<select id="getBaseAndMassifList" resultMap="probeSpecificBean">
+	  SELECT id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,base_name,massif_name,
+      DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(upload_time,'%Y-%c-%d %H:%i:%s') uploadTime
+	  from iot_massif_product 
+	  <where>
+	   <if test="baseId!=null">
+	     and base_id=#{baseId}
+	  </if>
+	   <if test="massifId!=null">
+	    and massif_id=#{massifId}
+	  </if>
+	  </where>
+	  	  order by upload_time desc
+	</select>
+	
+	
+	<!-- 查询全部设备，没有加入地块的也查询出来 -->
+	<select id="getDeviceListForMassif" resultMap="massifAndDeviceMap">
+	  SELECT b.id id,a.serial_number device_id,a.device_name device_name,b.base_name base_name,b.massif_name massif_name,
+      DATE_FORMAT(b.create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(b.upload_time,'%Y-%c-%d %H:%i:%s') uploadTime
+	  FROM iot_devices_info a LEFT JOIN iot_massif_product b ON a.serial_number = b.device_id
+	  <where>
+	  <if test="enterpriseId!=null">
+	    b.enterprise_id=#{enterpriseId}
+	  </if>
+	   <if test="baseId!=null">
+	    and b.base_id=#{baseId}
+	  </if>
+	   <if test="massifId!=null">
+	    and b.massif_id=#{massifId}
+	  </if>
+	 <if test="deviceId!=null">
+	   and device_id in 
+	   <foreach item="item"  collection="deviceId" open="(" separator="," close=")">
+	    #{item}
+        </foreach>
+	  </if>
+	  </where>
+	  	  order by b.create_time desc
+	</select>
+	
+	
+	<select id="getMassifAndDeviceList" resultMap="massifAndDeviceMap">
+	  SELECT id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,base_name,massif_name,
+      DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(upload_time,'%Y-%c-%d %H:%i:%s') uploadTime
+	  from iot_massif_product 
+	  <where>
+	  <if test="enterpriseId!=null">
+	    enterprise_id=#{enterpriseId}
+	  </if>
+	   <if test="baseId!=null">
+	     and base_id=#{baseId}
+	  </if>
+	   <if test="massifId!=null">
+	    and massif_id=#{massifId}
+	  </if>
+	  <if test="deviceId!=null">
+	   and device_id in 
+	   <foreach item="item"  collection="deviceId" open="(" separator="," close=")">
+	    #{item}
+        </foreach>
+	  </if>
+	  </where>
+	  	  order by convert(enterprise_name using gbk),create_time desc
+	</select>
+	
+	<select id="getMassifAndDeviceListById" resultMap="massifAndDeviceMap">
+	  SELECT id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,base_name,massif_name,
+      DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(upload_time,'%Y-%c-%d %H:%i:%s') uploadTime
+	  from iot_massif_product where iot_massif_product.id=#{id}
+	</select>
+
+	<update id="updataMassifBase"  parameterType="com.ssm.beans.MassifProductbean">
+		update iot_massif_product 
+			set base_name=#{baseName} , upload_time=#{uploadTime} 
+		where base_id=#{baseId}
+	</update>
+	<update id="updataMassifMass"  parameterType="com.ssm.beans.MassifProductbean">
+		update iot_massif_product 
+			set massif_name=#{massIfName} ,upload_time=#{uploadTime}
+		where mass_id=#{massifId}
+	</update>
+	
+	
+	<insert id="insertMassifProduct" parameterType="com.ssm.beans.MassifProductbean">
+	 insert into 
+	 iot_massif_product (id,massif_id,device_id,device_type,enterprise_id,enterprise_name,base_id,base_name,massif_name,upload_time)
+	 values(#{Id},#{massifId},#{deviceSerialNumber},#{deviceType},#{enterpriseId},#{enterpriseName},#{baseId},#{baseName},#{massIfName},#{uploadTime})
+	</insert> 
+	<select id="selectMassByName" parameterType="java.lang.String" resultType="com.ssm.beans.MassifProductbean">
+		select * from iot_massif_product
+			where base_name=#{baseName}
+	</select>
+	<select id="selectMassifProductByEnterpriseId"  resultMap="massifAndBaseMap">
+	 select  id,massif_id,massif_name,base_id,base_name from iot_massif_product where enterprise_id=#{enterpriseId} group by base_id
+	</select>
+
+	<select id="selectMassifProductByEnterpriseIdAndBaseId"  resultMap="massifAndBaseMap">
+	 select  id,massif_id,massif_name,base_id,base_name from iot_massif_product where enterprise_id=#{enterpriseId} and base_id=#{baseId} group by  massif_id
+	</select>
+	 <update id="updateMassIfBaseEnter" parameterType="java.util.Map">
+	   update iot_massif_product 
+			set enterprise_name=#{enterpriseName} 
+			where enterprise_id=#{enterpriseId}
+	</update> 
+	<select  id="CountDeviceNumber" resultMap="DeviceCount">
+	SELECT device_type,enterprise_id,base_id,base_name,COUNT(*) AS number FROM  iot_massif_product  WHERE enterprise_id=#{enterpriseId} GROUP BY base_id,device_type
+	</select>
+	<update id="updateMP" parameterType="com.ssm.beans.MassifProductbean">
+		update iot_massif_product
+			set massif_id=#{massifId},massif_name=#{massIfName},base_id=#{baseId},
+			base_name=#{baseName},
+			upload_time=#{uploadTime}
+		where 
+			id=#{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateMassifProductByMassifId" parameterType="java.util.Map">
+		update iot_massif_product
+			set massif_name=#{massifName},upload_time=#{uploadTime}
+		where 
+			massif_id=#{massifId,jdbcType=VARCHAR}
+	</update>
+	<update id="updateMassifProductByBaseId" parameterType="java.util.Map">
+		update iot_massif_product
+			set base_name=#{baseName},upload_time=#{uploadTime}
+		where 
+			base_id=#{baseId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteMPByDeviceSer">
+	   delete from iot_massif_product 
+	   where 
+	  	device_id=#{string}
+	</delete>
+</mapper>	

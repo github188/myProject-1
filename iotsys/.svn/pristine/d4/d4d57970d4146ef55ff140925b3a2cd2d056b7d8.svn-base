@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.objectFactory" value="spring"/>
+  	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 -->
+    <constant name="struts.serve.static.browserCache" value="false"/>
+    <!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->
+    <constant name="struts.configuration.xml.reload" value="true"/>
+    <!-- 开发模式下使用,这样可以打印出更详细的错误信息(true) -->
+    <constant name="struts.devMode" value="false" />
+     <!-- 默认的视图主题 -->
+    <constant name="struts.ui.theme" value="simple" /> 
+	<!-- 设置文件上传最大值 -->
+	<constant name="struts.multipart.maxSize"  value ="9000000000" />
+	<!-- 设置Struts2不支持动态方法调用 -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="false"/>
+    <!-- 设置前端访问后台时，后缀是.do -->
+    <constant name="struts.action.extension" value="do" />
+    <!-- 指定Web应用的默认编码集 -->	
+    <constant name="struts.i18n.encoding" value="utf-8" />
+	<!-- 引入子文件 -->
+	<include file="struts/struts-redis.xml"></include>
+
+	<include file="struts/struts-monitor.xml"></include>
+	<include file="struts/struts-warning.xml"></include>
+	<include file="struts/struts-batchprocess.xml"></include>
+	<include file="struts/struts-alQaeda.xml"></include>
+	<include file="struts/struts-deviceInfo.xml"></include>
+  	<include file="struts/struts-MassifProduct.xml"></include>
+	<include file="struts/struts-cameraInfoAction.xml"></include>
+	<include file="struts/struts-probeSpecificData.xml"></include>
+	<include file="struts/struts-turn.xml"></include>
+	<include file="struts/struts-upload.xml"></include>
+	<include file="struts/struts-probeDefault.xml"></include>
+</struts>

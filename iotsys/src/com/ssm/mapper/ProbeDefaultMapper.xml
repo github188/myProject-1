@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.ProbeDefaultMapper">
+<!-- 自定义返回结果集 -->
+	<resultMap id="ProbeDefault" type="com.ssm.beans.ProbeDefaultBean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="surveyName" column="survey_name" javaType="java.lang.String"></result>
+		<result property="unit" column="unit" javaType="java.lang.String"></result>
+		<result property="surveyMax" column="survey_max" javaType="java.lang.Integer"></result>
+		<result property="surveyMin" column="survey_min" javaType="java.lang.Integer"></result>
+		<result property="imgUrl" column="img_url" javaType="java.lang.String"></result>
+		
+	</resultMap>
+	
+	<select id="findAll"  resultMap="ProbeDefault">
+	  select id,survey_name,unit,survey_max,survey_min,img_url from iot_probe_default where 1=1;
+	</select>
+	
+	<select id="findById" resultMap="ProbeDefault">
+	 select id,survey_name,unit,survey_max,survey_min,img_url from iot_probe_default where id=#{id};
+	</select>
+</mapper>	

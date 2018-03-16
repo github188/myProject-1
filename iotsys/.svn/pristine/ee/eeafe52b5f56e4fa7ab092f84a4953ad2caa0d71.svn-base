@@ -1,0 +1,188 @@
+/*顶部*/
+.login-top-box{	
+	width:100%;
+	height:120px;
+	background:#fff;
+	text-align:center;
+}
+.login-logo-box{	
+	width:900px;
+	height:100%;
+	display:inline-block;
+}
+.logo-img{
+	width:168px;
+	height:40px;
+	margin-top:60px;
+	float:left;
+}
+.logo-title{
+	float:left;
+	margin-left:36px;
+	margin-top:70px;
+	font-size:22pt;
+	color:#005bac;
+	font-weight:600;
+	font-family:"Microsoft YaHei";
+}
+/*中间*/
+.login-middle-box{
+	width:100%;
+	height:520px;
+	background:url("../img/login/login_02.png") no-repeat;
+	background-size:100% 100%;
+	text-align:center;
+}
+
+.login-middle-inner{
+	width:900px;
+	height:520px;
+	display:inline-block;
+}
+
+.login-box{	
+	width:320px;
+	height:327px;
+	float:right;
+	background:#fff;
+	position:relative;
+	top:56px;
+	padding:0 20px;
+	text-align:left;
+	box-shadow:0 0 15px #005bac;
+}
+
+.login-title{
+	width:100%;
+	height:34px;
+	line-height:34px;
+	color:#005bac;
+	font-family:"Microsoft YaHei";
+	margin-top:25px;
+	font-size:18pt;
+	margin-bottom:10px;
+	
+}
+
+.login-layer-1,.login-layer-2,.login-layer-3,.login-layer-4{
+	width:100%;
+	height:40px;
+	margin-bottom:16px;
+}
+.login-name-icon{
+	float:left;
+	width:40px;
+	height:40px;
+	background:url("../img/login/login_08.png") no-repeat;
+}
+
+.login-pass-icon{
+	float:left;
+	width:40px;
+	height:40px;
+	background:url("../img/login/login_11.png") no-repeat;
+}
+.login-code-icon{
+	float:left;
+	width:40px;
+	height:40px;
+	background:url("../img/login/login_13.png") no-repeat;
+}
+
+.login-name-input,.login-pass-input{
+	float: left;
+    height: 40px;
+    line-height: 30px;
+    width: 280px;
+
+}
+.login-code-input{
+	width:140px;
+	height:40px;
+	float:left;
+	margin-right:10px;
+	margin-right:5px;
+	line-height:22px;
+}
+
+.login-code-img{
+	 float: right;
+    height: 41px;
+    margin-top: -1px;
+    width: 99px;
+
+}
+.login-code-img img{
+	width:100%;
+	height:100%;
+}
+
+.login-name-input input,.login-pass-input input{
+	width:266px;
+	height:32px;
+	line-height:22px;
+	border-radius:0;
+	background:#E4EBF3;
+	border:none;
+}
+.login-code-input input{
+	 background: #e4ebf3 none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 0;
+    height: 32px;
+    line-height: 22px;
+    width: 146px;
+	
+}
+
+input:focus{
+	border:none;
+}
+.login-layer-4{
+	background:#0A5AA3;
+}
+.login-button{
+	width:100%;
+	height:100%;
+	background:#0A5AA3;
+	border:none;
+	font-size:14px;
+	color:#fff;
+}
+
+
+.login-bottom-box{
+	width:100%;
+	text-align:center;
+	color:#777;
+	margin-top:10px;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, .uneditable-input:focus {
+	border-color:none;
+	outline:none;
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none;
+	box-shadow:none;
+}
+
+.login-layer-5{   
+    height: 25px;
+    line-height: 25px;
+    text-align: right;
+    width: 100%;
+	
+}
+.login-layer-5 a{
+	 color: #0a5aa3;
+	 cursor:pointer;
+}
+.alert-dialog .modal-header{
+	 background: #428bca;
+    color: #fff;
+    font-size: 15px;
+    width: 560px;
+}
+.alert-dialog .close{
+	font-size:26px;
+}

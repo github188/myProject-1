@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.ProbeSpecificDataBackUpsMapper">
+	<!-- 自定义返回结果集 -->
+	<resultMap id="probeSpecificBackUpsMap" type="com.ssm.beans.ProbeSpecificDataBackUpBean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="pkProbeId" column="pk_probe_id" javaType="java.lang.String"></result>
+		<result property="pkDevicesId" column="pk_devices_id" javaType="java.lang.String"></result>
+		<result property="probeData" column="probe_data" javaType="java.lang.Float" jdbcType="FLOAT"></result>
+		<result property="deviceSerialNumber" column="device_serial_number" javaType="java.lang.String"></result>
+		<result property="surveyNo" column="survey_no" javaType="java.lang.Integer"></result>
+		<result property="probeUnit" column="probe_unit" javaType="java.lang.String"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="updateTime" column="update_time" javaType="java.lang.String"></result>
+	</resultMap>
+	
+	<!-- 数据备份-->
+	<insert id="BackUpProbeSpecificData"  parameterType="java.util.List">
+		INSERT INTO iot_probe_specific_data_backups (id,pk_probe_id,pk_devices_id,probe_data,
+		device_serial_number,probe_unit,survey_no,create_time) 
+		select 
+	      id,pk_probe_id,pk_devices_id,probe_data,device_serial_number,probe_unit,survey_no,
+	      DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') create_time
+	  from 
+	      iot_probe_specific_data
+	  where
+	      create_time &gt;=#{backStartTime} and create_time &lt;=#{backEndTime}
+	</insert>
+</mapper>	

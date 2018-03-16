@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	
+	<!-- 指明哪个类要做定时任务配置 -->
+	<bean id="dayEndTimer" class="com.ssm.quartz.DayEndProcess" />
+	<bean id="pushTestTimerAuto" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- dayEndTimer == 上面那个bean的id -->
+		<property name="targetBeanName" value="dayEndTimer" />
+		<!-- 指明这个类里面的哪个方法 -->
+		<property name="targetMethod" value="emptyYestodayIntegral" />
+		<!-- 设置多个job不会并发运行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="dayEnd" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<!-- pushTestTimerAuto == 上面那个bean的id -->
+			<ref bean="pushTestTimerAuto" />
+		</property>
+		<!-- 设置cron表达式 具体配置 访问 www.baidu.com -->
+		<property name="cronExpression">
+			<!-- 每隔5秒分钟执行一次 -->
+			 <!-- <value>*/5 * * * * ?</value> -->
+			<!-- 每天凌晨执行 -->
+			 <value>0 0 0 * * ?</value> 
+		</property>
+	</bean>
+	
+	<bean id="BatchTimer" class="com.ssm.action.BatchProcessAction" />
+	<bean id="pushTestTimerAuto1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- dayEndTimer == 上面那个bean的id -->
+		<property name="targetBeanName" value="BatchTimer" />
+		<!-- 指明这个类里面的哪个方法 -->
+		<property name="targetMethod" value="BatchProcessForHour" />
+		<!-- 设置多个job不会并发运行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="HourTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<!-- pushTestTimerAuto == 上面那个bean的id -->
+			<ref bean="pushTestTimerAuto1" />
+		</property>
+		<!-- 设置cron表达式 具体配置 访问 www.baidu.com -->
+		<property name="cronExpression">
+			<!-- 每个小时执行 -->
+			<!-- * * * * * * *对应秒，分，小时，天，月，周，年 -->
+			 <value> 0 0 0/1 * * ?</value> 
+		</property>
+	</bean>
+	
+	<bean id="pushTestTimerAuto2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- dayEndTimer == 上面那个bean的id -->
+		<property name="targetBeanName" value="BatchTimer" />
+		<!-- 指明这个类里面的哪个方法 -->
+		<property name="targetMethod" value="BatchProcessForDay" />
+		<!-- 设置多个job不会并发运行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="DayTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<!-- pushTestTimerAuto == 上面那个bean的id -->
+			<ref bean="pushTestTimerAuto2" />
+		</property>
+		<!-- 设置cron表达式 具体配置 访问 www.baidu.com -->
+		<property name="cronExpression">
+			<!-- 每天执行一次 -->
+			 <value> 0 0 0 * * ?</value> 
+		</property>
+	</bean>
+	
+	<bean id="pushTestTimerAuto3" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- dayEndTimer == 上面那个bean的id -->
+		<property name="targetBeanName" value="BatchTimer" />
+		<!-- 指明这个类里面的哪个方法 -->
+		<property name="targetMethod" value="BatchProcessForMonth" />
+		<!-- 设置多个job不会并发运行 -->
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="MonthTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<!-- pushTestTimerAuto == 上面那个bean的id -->
+			<ref bean="pushTestTimerAuto3" />
+		</property>
+		<!-- 设置cron表达式 具体配置 访问 www.baidu.com -->
+		<property name="cronExpression">
+			<!-- 每个月执行一次 -->
+			 <value> 0 0 0 1 1/1 ?</value> 
+		</property>
+	</bean>
+	
+	<bean id="quartzTask" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- 有多少个定时器就对应写多少个ref -->
+				<ref bean="dayEnd" />
+				<ref bean="HourTimer" />
+				<ref bean="DayTimer" />
+				<ref bean="MonthTimer" />
+			</list>
+		</property>
+		<!-- 设置定时任务不执行   默认为true -->
+		<property name="autoStartup" value="true" />
+	</bean>
+  
+</beans>

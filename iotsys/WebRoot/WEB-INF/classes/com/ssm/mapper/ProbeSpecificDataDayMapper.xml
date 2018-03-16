@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.ProbeSpecificDataDayMapper">
+<!-- 自定义返回结果集 -->
+	<resultMap id="AvgMap" type="probeSpecificDataDayBean">
+		<result property="pkProbeId" column="pk_probe_id" javaType="java.lang.String"></result>
+		<result property="pkDevicesId" column="pk_devices_id" javaType="java.lang.String"></result>
+		<result property="probeData" column="probe_data" javaType="java.lang.Float" jdbcType="FLOAT"></result>
+		<result property="probeUnit" column="probe_unit" javaType="java.lang.String"></result>
+			<result property="surveyNo" column="survey_no"></result>
+		<result property="createTime" column="create_time"></result>
+	</resultMap>
+	
+		<!-- 将每隔一天统计的数据插入天批处理表中-->
+	<insert id="addProbeSpecificDataDay"  parameterType="java.util.List">
+		INSERT INTO iot_probe_specific_data_day (pk_probe_id,pk_devices_id,probe_data,probe_unit,create_time,survey_no) VALUES
+		<foreach collection ="list" item="probeSpecificDataDayBean" index= "index" separator =",">
+                 (#{probeSpecificDataDayBean.pkProbeId}, #{probeSpecificDataDayBean.pkDevicesId},#{probeSpecificDataDayBean.probeData},#{probeSpecificDataDayBean.probeUnit},#{probeSpecificDataDayBean.createTime},#{probeSpecificDataDayBean.surveyNo})
+             </foreach >
+	</insert>
+	
+	<!-- 每隔一个月进行数据统计 -->
+	<select id="AvgProbeSpecificDartaByMonth" resultMap="AvgMap">
+	   SELECT  pk_devices_id,pk_probe_id,FORMAT(AVG( probe_data),2) as probe_data,probe_unit,survey_no,DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') create_time FROM iot_probe_specific_data_day  WHERE  create_time &gt;=#{startTime} and create_time &lt;=#{endTime} GROUP BY pk_devices_id,pk_probe_id 
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>	

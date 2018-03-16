@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.TimerControllerInfoMapper">
+	
+	<!-- 返回的对象的结果集（主要是要维护massifproduct对象） -->
+	<resultMap id="ParameterControllerInfoMap" type="com.ssm.beans.ParameterControllerInfoBean" >
+		<id property="id" column="id"/>
+		<result property="controllerId"  column="controller_id"/>
+		<result property="deviceSerialNumber"  column="device_serial_number"/>
+		<result property="surveyNo"  column="survey_no"/>
+		<result property="probeId"  column="probe_id"/>
+		<result property="collectorName"  column="collector_name"/>
+		<result property="controlCondition"  column="control_condition"/>
+		<result property="controlValue"  column="control_value"/>
+		<result property="createTime"  column="create_time"/>
+		<result property="updateTime"  column="update_time"/>
+	</resultMap>
+	
+	<!-- 查找所有 -->
+	<select id="selectAll" resultMap="com.ssm.beans.ParameterControllerInfoBean">
+		SELECT * FROM iot_parameter_control_info
+	</select>
+	
+	
+	<!-- 增 -->
+	<insert id="addParameterControllerInfo" parameterType="com.ssm.beans.ParameterControllerInfoBean">
+		insert into iot_parameter_control_info
+			(id,
+			controller_id,
+			device_serial_number,
+			survey_no,
+			probe_id,
+			collector_name,
+			control_condition,
+			control_value,<!-- ad -->
+			create_time,
+			update_time)
+		   values(#{id},#{controllerId},#{deviceSerialNumber},#{surveyNo},#{probeId},#{collectorName},#{controlCondition},
+			#{controlValue},#{createTime},#{updateTime})
+	</insert>
+	
+	<!-- 改 -->
+	<update id="updateParameterControllerInfo" parameterType="com.ssm.beans.ParameterControllerInfoBean">
+		update iot_parameter_control_info
+			set controller_id=#{controllerId},device_serial_number=#{deviceSerialNumber},survey_no=#{surveyNo},
+			probe_id=#{probeId},collector_name=#{collectorName},control_condition=#{controlCondition},
+			control_value=#{controlValue},create_time=#{createTime},update_time=#{updateTime}
+		where 
+				id=#{id}
+	</update>
+	
+	<!-- 删 -->
+	<delete id="deleteParameterControllerInfoById" parameterType="java.lang.String">
+		delete iot_parameter_control_info where id=#{id}
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,32 @@
+
+.edit_all input,select{    
+    		width: 320px;
+		    height: 34px;
+		    float: right;
+		    padding-left: 8px;
+		    font-size: 12px;
+		    font-weight: 400;
+}
+
+.muea .active1 {
+	border-bottom: 5px solid #0099CC;
+	color: #0099CC;
+	text-align:center;
+}
+		
+#muea{
+	margin-left: 20px;
+	width: 100%;
+	height: 50px;
+	font-size:25px;
+}
+
+.coller{
+	margin:60px;
+	width:150px ;
+	height: 230px; 
+	margin:20px; 
+	float:left;
+	text-align:center;
+	background-color: yellow;
+}

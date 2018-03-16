@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssm.mapper.ProbeMapper">
+	<!-- 自定义返回结果集 -->
+ 	<resultMap id="probeBean" type="com.ssm.beans.ProbeBean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="surveyName" column="survey_name" javaType="java.lang.String"></result>
+		<result property="unit" column="unit" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_serial_number" javaType="java.lang.String" ></result>
+		<result property="surveyNo" column="survey_no" javaType="java.lang.Integer"></result>
+		<result property="surveyMax" column="survey_max" javaType="java.lang.String"></result>
+		<result property="surveyMin" column="survey_min" javaType="java.lang.String"></result>
+		<result property="sortNo" column="sort_no" javaType="java.lang.Integer"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="updateTime" column="update_time" javaType="java.lang.String"></result>
+		<result property="probeDefaultId" column="probe_default_id" javaType="java.lang.String" ></result>
+		<collection property="probeDefaultBean" column="probe_default_id" select="com.ssm.mapper.ProbeDefaultMapper.findById"></collection>
+	</resultMap> 
+	
+	<resultMap id="probeDataMap" type="com.ssm.beans.ProbeBean">
+		<id property="id" column="id" javaType="java.lang.String"></id>
+		<result property="surveyName" column="survey_name" javaType="java.lang.String"></result>
+		<result property="unit" column="unit" javaType="java.lang.String"></result>
+		<result property="deviceSerialNumber" column="device_serial_number" javaType="java.lang.String" ></result>
+		<result property="surveyNo" column="survey_no" javaType="java.lang.Integer"></result>
+		<result property="surveyMax" column="survey_max" javaType="java.lang.String"></result>
+		<result property="surveyMin" column="survey_min" javaType="java.lang.String"></result>
+		<result property="sortNo" column="sort_no" javaType="java.lang.Integer"></result>
+		<result property="createTime" column="create_time" javaType="java.lang.String"></result>
+		<result property="updateTime" column="update_time" javaType="java.lang.String"></result>
+		<result property="probeDefaultId" column="probe_default_id" javaType="java.lang.String" ></result>
+		<collection property="probeDefaultBean" column="probe_default_id" select="com.ssm.mapper.ProbeDefaultMapper.findById"></collection>
+		<collection property="probeSpecificDatalist" column="{dsn = device_serial_number,sun = survey_no}" select="com.ssm.mapper.ProbeSpecificDataMapper.findNewOneData" />
+	</resultMap>
+	
+	<select id="getProbeAndProbeData" parameterType="java.util.Map" resultMap="probeDataMap">
+	  SELECT
+	    id,survey_name,unit,device_serial_number,survey_no,survey_max,survey_min,sort_no,probe_default_id,DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(update_time,'%Y-%c-%d %H:%i:%s') updateTime 
+	  from 
+	  	iot_probe
+	  where 
+	  	device_serial_number =#{deviceno,jdbcType=VARCHAR}
+	  order by 
+	  	sort_no
+	</select>
+	
+	<!-- 批量操作和foreach标签 -->
+	<insert id="insertMany" parameterType="java.util.List">
+	   insert into iot_probe (id,survey_name,unit,device_serial_number,survey_no,survey_max,survey_min,sort_no,update_time,probe_default_id) values 
+	    <foreach collection="probeBeans" item="probeBeans" separator=",">
+	     (#{probeBeans.id},#{probeBeans.surveyName},#{probeBeans.unit},#{probeBeans.deviceSerialNumber},#{probeBeans.surveyNo},#{probeBeans.surveyMax},#{probeBeans.surveyMin},#{probeBeans.sortNo},#{probeBeans.updateTime},#{probeBeans.probeDefaultId})
+	    </foreach>
+	</insert>
+
+	<select id="findByDeviceSerialNumber" resultMap="probeBean">
+	  SELECT
+	    id,survey_name,unit,device_serial_number,survey_no,survey_max,survey_min,sort_no,probe_default_id,DATE_FORMAT(create_time,'%Y-%c-%d %H:%i:%s') createTime,DATE_FORMAT(update_time,'%Y-%c-%d %H:%i:%s') updateTime 
+	  from 
+	  	iot_probe
+	  where 
+	  	device_serial_number =#{serialNumber,jdbcType=VARCHAR}
+	  order by
+	  	sort_no
+	</select>
+	
+	
+	<resultMap id="probeMapPie" type="com.ssm.beans.CommonBean">
+		<result property="t1" column="t1"></result>
+		<result property="t2" column="t2"></result>
+		<result property="t3" column="t3"></result>
+		<result property="t4" column="t4"></result>
+		<result property="t5" column="t5"></result>
+		<result property="t6" column="t6"></result>
+		<result property="t7" column="t7"></result>
+		<result property="t8" column="t8"></result>
+		<result property="t9" column="t9"></result>
+		<result property="t10" column="t10"></result>
+	</resultMap>
+	
+	<!-- 原始数据表统计表查询 -->
+	<select id="getSpecificData" parameterType="java.util.Map" resultMap="probeMapPie">
+		<![CDATA[ 
+			SELECT
+			p.survey_name t1,
+			p.unit t2,
+			d.survey_no t3,
+			SUM(CASE WHEN probe_data < #{minNo} THEN	'1' ELSE '0'	END) t8,
+			SUM(CASE WHEN probe_data <= #{maxNo} AND probe_data >= #{minNo} THEN '1' ELSE '0' END ) t9,
+			SUM( CASE WHEN probe_data > #{maxNo} THEN '1' ELSE '0' END ) t10
+		FROM 
+			${tableNames} d LEFT JOIN iot_probe p ON d.pk_devices_id = p.device_serial_number
+		WHERE
+			d.survey_no = p.survey_no
+			and d.pk_devices_id = #{serialNumber} and d.survey_no = #{surveyNo}
+			and d.create_time >= #{startTime} AND d.create_time <= #{endTime}
+		GROUP BY
+			p.survey_no
+		]]>
+	</select>
+	
+	<!-- 原始数据表 -->
+	<select id="getSpecificDataCountForPie" parameterType="java.util.Map" resultMap="probeMapPie">
+		<![CDATA[ 
+		SELECT
+			p.survey_name t1,p.unit t2,d.survey_no t3 ,
+			SUM(CASE WHEN probe_data <  #{minNo} THEN '1' ELSE '0' END
+			) t8,
+			SUM(CASE  WHEN probe_data <= #{maxNo}  AND probe_data >=  #{minNo} THEN '1'  ELSE '0' END
+			) t9,
+			SUM(CASE WHEN probe_data > #{maxNo} THEN '1'  ELSE '0' END
+			) t10
+		FROM
+			iot_probe_specific_data d left JOIN iot_probe p on	d.device_serial_number = p.device_serial_number
+		WHERE
+			d.survey_no = p.survey_no
+			and d.device_serial_number = #{serialNumber} and d.survey_no = #{surveyNo} 
+			and d.create_time >= #{startTime}  and d.create_time <= #{endTime} 
+		GROUP BY p.survey_no
+		]]>
+	</select>
+	
+	<!-- 批量更新探测器 -->
+	<update id="updateBatch" parameterType="java.util.List">
+        update iot_probe
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="survey_name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.surveyName!=null">
+                  when id=#{item.id} then #{item.surveyName}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="survey_no =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.surveyNo!=null">
+                  when id=#{item.id} then #{item.surveyNo}
+                  </if>
+                </foreach>
+            </trim>
+             <trim prefix="unit =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.unit!=null">
+                  when id=#{item.id} then #{item.unit}
+                  </if>
+                </foreach>
+            </trim>
+             <trim prefix="survey_min =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.surveyMin!=null">
+                  when id=#{item.id} then #{item.surveyMin}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="sort_no =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.sortNo!=null">
+                  when id=#{item.id} then #{item.sortNo}
+                  </if>
+                </foreach>
+            </trim>
+             <trim prefix="survey_Max =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.surveyMax!=null">
+                  when id=#{item.id} then #{item.surveyMax}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="update_time =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.updateTime!=null">
+                  when id=#{item.id} then #{item.updateTime}
+                  </if>
+                </foreach>
+            </trim>
+            <trim prefix="probe_default_id =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                  <if test="item.probeDefaultId!=null">
+                  when id=#{item.id} then #{item.probeDefaultId}
+                  </if>
+                </foreach>
+            </trim>
+        </trim>
+       <where>
+       <foreach collection="list" index="index" item="item" separator="or">
+            id=#{item.id}
+        </foreach>
+       </where>
+    </update>
+	<update id="updateProbe" parameterType="com.ssm.beans.ProbeBean">
+		update iot_probe
+			set survey_name=#{surveyName},unit=#{unit},device_serial_number=#{deviceSerialNumber},
+			survey_no=#{surveyNo},survey_max=#{surveyMax},survey_min=#{surveyMin},probe_default_id=#{probeDefaultId},
+			sort_no=#{sortNo},update_time=#{updateTime}
+		where 
+			id=#{id}
+	</update>
+	
+	<delete id="deleteByDeviceSer">
+	delete from iot_probe where device_serial_number=#{serialNumber}
+	</delete>
+	
+	<delete id="deleteByIds">
+	delete from iot_probe where id in
+	 	<foreach collection="ids" index="index" item="item" open="(" separator="," close=")">  
+        	#{item}  
+    	</foreach>  
+	</delete>
+</mapper>	

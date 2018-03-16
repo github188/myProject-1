@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="myMongo3" default="all" basedir="/usr/svn/TraceForTinyComV2/enterprise_web/myMongo3">
+	 <!-- 工程发布构建工程文件结构，现在不用，发布由开发打WAR包发布 --> 
+    <property name="project-name" value="${ant.project.name}"/>
+    <property name="version" value="1.0.0"/>
+    <property name="src.dir" value="src"/>
+    <property name="src.config" value="config"/>
+
+    <property name="lib.dir" value="WebRoot/WEB-INF/lib"/>
+    <property name="tomcat.lib.dir" value="tomcat_lib"/>
+    <property name="webxml.dir" value="WebRoot/WEB-INF/web.xml"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.class.dir" value="${build.dir}/classes"/>
+
+
+		<path id="compile.classpath">
+				<fileset dir="${lib.dir}">
+						<include name ="*.jar"/>
+				</fileset>
+				<fileset dir="${tomcat.lib.dir}">
+						<include name ="*.jar"/>
+				</fileset>
+	  </path>
+
+
+
+    <!-- init target --> 
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.class.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+        <tstamp/>
+        <echo message="begin ant task at : ${DSTAMP}-${TSTAMP}"></echo>
+    </target>
+
+   
+    <!-- 编译源文件 -->
+    <target name="compile" depends="init">
+        <javac destdir="${build.class.dir}" includeantruntime="on" deprecation="on" encoding="UTF-8">
+            <src path="${src.dir}"/>
+            <classpath refid="compile.classpath"/>
+        </javac>
+        <copy todir="${build.class.dir}">
+        	<fileset dir="${src.dir}">
+					    <include name="**/*.*" />
+						<include name="**/*" />
+					</fileset>
+        </copy>
+        
+        <!--拷贝class文件到classes目录-->
+				<copy todir="${dist.dir}/${project-name}/WEB-INF/classes">
+				    <fileset dir="${build.class.dir}">
+					    <include name="**/*.*" />
+						<include name="**/*" />
+					</fileset>
+					<fileset dir="${src.config}">
+						<include name="**/*.*" />
+						 <include name="**/*" />
+					</fileset>
+					</copy>
+    </target>
+
+    <!-- 打包文件 -->
+    <target name="war" depends="compile">
+        <war destfile="${dist.dir}/${project-name}.war" webxml="${webxml.dir}">
+            <fileset dir="WebRoot"/>
+						<lib dir="${lib.dir}"/>
+						<classes dir="${dist.dir}/${project-name}/WEB-INF/classes"/>
+        </war>
+        
+	
+				
+    </target>
+
+   
+   
+    <!-- 清除产生的类、junit相关类、文档 -->
+    <target name="clean">
+        <delete dir="${dist.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+   
+   <target name="all" depends="clean,compile,war"
+          description="Clean work dirs, then compile and create a WAR"/>
+   
+</project> 
